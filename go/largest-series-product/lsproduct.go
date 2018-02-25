@@ -48,9 +48,8 @@ func LargestSeriesProduct(sequence string, span int) (int, error) {
 		return 1, nil
 	}
 
-	upper := size - span + 1
-	largest := productOf(sequence, 0, span)
-	for i := 1; i < upper; i++ {
+	largest := 0
+	for i := 0; i <= size-span; i++ {
 		if cur := productOf(sequence, i, span); cur > largest {
 			largest = cur
 		}
