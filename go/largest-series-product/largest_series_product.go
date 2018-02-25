@@ -6,17 +6,17 @@ import (
 	"strconv"
 )
 
-func charToDigit(c byte) (digit int) {
+func charToDigit(c rune) (digit int) {
 	digit, _ = strconv.Atoi(string(c))
 	return
 }
 
-func productOf(sequence string, start, span int) (prod int) {
-	prod = 1
-	for i := start; i < start+span; i++ {
-		prod *= charToDigit(sequence[i])
+func productOf(sequence string, res chan<- int) {
+	prod := 1
+	for _, b := range sequence {
+		prod *= charToDigit(b)
 	}
-	return
+	res <- prod
 }
 
 func validateParams(sequence string, span int) (bool, error) {
@@ -48,10 +48,16 @@ func LargestSeriesProduct(sequence string, span int) (int, error) {
 		return 1, nil
 	}
 
+	upper := size - span
+	products := make(chan int, upper)
+	for i := 0; i <= upper; i++ {
+		go productOf(sequence[i:i+span], products)
+	}
+
 	largest := 0
-	for i := 0; i <= size-span; i++ {
-		if cur := productOf(sequence, i, span); cur > largest {
-			largest = cur
+	for i := 0; i <= upper; i++ {
+		if prod := <-products; prod > largest {
+			largest = prod
 		}
 	}
 	return largest, nil
