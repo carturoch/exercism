@@ -55,9 +55,13 @@ func LargestSeriesProduct(sequence string, span int) (int, error) {
 	}
 
 	largest := 0
-	for i := 0; i <= upper; i++ {
-		if prod := <-products; prod > largest {
+	times := 0
+	for prod := range products {
+		if prod > largest {
 			largest = prod
+		}
+		if times++; times > upper {
+			close(products)
 		}
 	}
 	return largest, nil
