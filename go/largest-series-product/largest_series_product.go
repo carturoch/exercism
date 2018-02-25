@@ -12,8 +12,8 @@ func charToDigit(c byte) (digit int) {
 }
 
 func productOf(sequence string, start, span int) (prod int) {
-	prod = charToDigit(sequence[start])
-	for i := start + 1; i < start+span; i++ {
+	prod = 1
+	for i := start; i < start+span; i++ {
 		prod *= charToDigit(sequence[i])
 	}
 	return
