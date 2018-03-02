@@ -1,10 +1,14 @@
 import java.util.List;
+import java.util.function.Function;
+import java.util.function.IntUnaryOperator;
+import java.util.function.Supplier;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 class LargestSeriesProductCalculator {
 
-    private List<Integer> digits;
+    private final List<Integer> digits;
 
     LargestSeriesProductCalculator(String inputNumber) throws IllegalArgumentException {
         if (inputNumber != "" && !inputNumber.matches("\\d+")) {
@@ -27,15 +31,20 @@ class LargestSeriesProductCalculator {
         if (digits.size() == numberOfDigits && numberOfDigits == 0) {
             return 1;
         }
-        long best = 0;
         int upperBoundary = digits.size() - numberOfDigits + 1;
-        for (int i = 0; i < upperBoundary; i++) {
-            long product = digits.get(i);
-            for (int j = 1; j < numberOfDigits; j++) {
-                product *= digits.get(i + j);
-            }
-            best = Long.max(best, product);
-        }
-        return best;
+        final Function<Integer, IntUnaryOperator> subListProduct = steps -> start -> productOf(start, steps);
+
+        return IntStream
+                .range(0, upperBoundary)
+                .map(subListProduct.apply(numberOfDigits))
+                .reduce(0, Integer::max);
+    }
+
+    private int productOf(int start, int steps) {
+        return digits
+                .subList(start, start + steps)
+                .stream()
+                .reduce((n, acc) -> n * acc)
+                .get();
     }
 }
