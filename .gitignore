@@ -3,6 +3,7 @@
 .gradle/
 out/
 build/
+node_modules/
 
 # VSCode support
 .vscode/
