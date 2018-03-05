@@ -1,4 +1,4 @@
-const ALPHA = 'abcdefgihjklmnopqrstuvwxyz';
+const ALPHA = [...'abcdefgihjklmnopqrstuvwxyz'];
 
 class Pangram {
   constructor(phrase) {
@@ -10,9 +10,7 @@ class Pangram {
       return false;
     }
     
-    return ALPHA
-      .split('')
-      .every((c) => this.phrase.toLowerCase().includes(c));
+    return ALPHA.every(c => this.phrase.toLowerCase().includes(c));
   }
 }
 
